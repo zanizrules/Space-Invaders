@@ -12,6 +12,7 @@ public:
 	~PlayerShip();
 
 	void Process(float deltaTime);
+	bool Initialise(Sprite* sprite);
 
 private:
 

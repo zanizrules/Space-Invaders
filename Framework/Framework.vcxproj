@@ -82,13 +82,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="animatedsprite.h" />
     <ClInclude Include="backbuffer.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="EnemyShip.h" />
     <ClInclude Include="entity.h" />
+    <ClInclude Include="Explosion.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="inputhandler.h" />
     <ClInclude Include="logmanager.h" />
+    <ClInclude Include="Particle.h" />
+    <ClInclude Include="ParticleEmitter.h" />
     <ClInclude Include="PlayerShip.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="texture.h" />
@@ -96,14 +100,17 @@
     <ClInclude Include="UserInput.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="animatedsprite.cpp" />
     <ClCompile Include="backbuffer.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="EnemyShip.cpp" />
     <ClCompile Include="entity.cpp" />
+    <ClCompile Include="Explosion.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="inputhandler.cpp" />
     <ClCompile Include="logmanager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Particle.cpp" />
     <ClCompile Include="PlayerShip.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="texture.cpp" />

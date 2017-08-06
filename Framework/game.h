@@ -11,6 +11,7 @@ class Sprite;
 class PlayerShip;
 class EnemyShip;
 class Bullet;
+class Explosion;
 
 class Game
 {
@@ -69,6 +70,7 @@ protected:
 	PlayerShip* m_playerShip;
 	std::list<EnemyShip*> m_enemyShips;
 	std::list<Bullet*> m_playerBullets;
+	std::list<Explosion*> m_explosions; 
 
 private:
 	

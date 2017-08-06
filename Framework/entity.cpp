@@ -27,15 +27,10 @@ Entity::~Entity()
 
 }
 
-bool
-Entity::Initialise(Sprite* sprite)
+bool Entity::Initialise(Sprite* sprite)
 {
 	assert(sprite);
 	m_pSprite = sprite;
-
-	m_x = (float) (Game::SCREEN_WIDTH - m_pSprite->GetWidth()) / 2;
-	m_y = (float) Game::SCREEN_HEIGHT - (2 * m_pSprite->GetHeight());
-
 	return (true);
 }
 

@@ -7,6 +7,7 @@
 #include "logmanager.h"
 #include "texturemanager.h"
 #include "sprite.h"
+#include "animatedsprite.h"
 #include "texture.h"
 
 // Library includes:
@@ -39,8 +40,7 @@ BackBuffer::~BackBuffer()
 	SDL_Quit();
 }
 
-bool 
-BackBuffer::Initialise(int width, int height)
+bool BackBuffer::Initialise(int width, int height)
 {
 	m_width = width;
 	m_height = height;
@@ -88,33 +88,28 @@ BackBuffer::Initialise(int width, int height)
 	return (true);
 }
 
-void 
-BackBuffer::Clear()
+void BackBuffer::Clear()
 {
 	SDL_SetRenderDrawColor(m_pRenderer, m_clearRed, m_clearGreen, m_clearBlue, 0xff);
 	SDL_RenderClear(m_pRenderer);
 }
 
-void
-BackBuffer::Present()
+void BackBuffer::Present()
 {
 	SDL_RenderPresent(m_pRenderer);
 }
 
-void
-BackBuffer::SetDrawColour(unsigned char r, unsigned char g, unsigned char b)
+void BackBuffer::SetDrawColour(unsigned char r, unsigned char g, unsigned char b)
 {
 	SetDrawColour(r, g, b, 0xFF);
 }
 
-void
-BackBuffer::SetDrawColour(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
+void BackBuffer::SetDrawColour(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
 {
 	SDL_SetRenderDrawColor(m_pRenderer, r, g, b, a);
 }
 
-void 
-BackBuffer::DrawSprite(Sprite& sprite)
+void BackBuffer::DrawSprite(Sprite& sprite)
 {
 	SDL_Rect dest;
 
@@ -126,8 +121,25 @@ BackBuffer::DrawSprite(Sprite& sprite)
 	SDL_RenderCopy(m_pRenderer, sprite.GetTexture()->GetTexture(), 0, &dest);
 }
 
-void
-BackBuffer::DrawRectangle(int x1, int y1, int x2, int y2)
+void BackBuffer::DrawAnimatedSprite(AnimatedSprite& sprite)
+{
+	SDL_Rect dest;
+	dest.x = sprite.GetX();
+	dest.y = sprite.GetY();
+	dest.w = sprite.GetFrameWidth();
+	dest.h = sprite.GetFrameHeight();
+
+	SDL_Rect source;
+	source.x = sprite.GetFrameWidth() * sprite.GetCurrentFrame();
+	source.y = 0;
+	source.w = sprite.GetFrameWidth();
+	source.h = sprite.GetFrameHeight();
+
+	SDL_RenderCopy(m_pRenderer, sprite.GetTexture()->GetTexture(), &source, &dest);
+}
+
+
+void BackBuffer::DrawRectangle(int x1, int y1, int x2, int y2)
 {
 	SDL_Rect fillRect;
 	
@@ -139,20 +151,17 @@ BackBuffer::DrawRectangle(int x1, int y1, int x2, int y2)
 	SDL_RenderFillRect(m_pRenderer, &fillRect);
 }
 
-void
-BackBuffer::DrawLine(int x1, int y1, int x2, int y2)
+void BackBuffer::DrawLine(int x1, int y1, int x2, int y2)
 {
 	SDL_RenderDrawLine(m_pRenderer, x1, y1, x2, y2);
 }
 
-void 
-BackBuffer::LogSDLError()
+void BackBuffer::LogSDLError()
 {
 	LogManager::GetInstance().Log(SDL_GetError());
 }
 
-Sprite* 
-BackBuffer::CreateSprite(const char* pcFilename)
+Sprite* BackBuffer::CreateSprite(const char* pcFilename)
 {
 	assert(m_pTextureManager);
 
@@ -167,8 +176,22 @@ BackBuffer::CreateSprite(const char* pcFilename)
 	return (pSprite);
 }
 
-void 
-BackBuffer::SetClearColour(unsigned char r, unsigned char g, unsigned char b)
+AnimatedSprite * BackBuffer::CreateAnimatedSprite(const char * pcFilename)
+{
+	assert(m_pTextureManager);
+
+	Texture* pTexture = m_pTextureManager->GetTexture(pcFilename);
+
+	AnimatedSprite* pSprite = new AnimatedSprite();
+	if (!pSprite->Initialise(*pTexture))
+	{
+		LogManager::GetInstance().Log("Sprite Failed to Create!");
+	}
+
+	return (pSprite);
+}
+
+void BackBuffer::SetClearColour(unsigned char r, unsigned char g, unsigned char b)
 {
 	m_clearRed = r;
 	m_clearGreen = g;

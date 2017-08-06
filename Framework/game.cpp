@@ -10,6 +10,7 @@
 #include "PlayerShip.h"
 #include "EnemyShip.h"
 #include "Bullet.h"
+#include "Explosion.h"
 
 // Library includes:
 #include <cassert>
@@ -162,6 +163,11 @@ void Game::Process(float deltaTime)
 		bullet->Process(deltaTime);
 	}
 
+	for (Explosion* explosion : m_explosions)
+	{
+		explosion->Process(deltaTime);
+	}
+
 	// Update player...
 	m_playerShip->Process(deltaTime);
 
@@ -175,8 +181,8 @@ void Game::Process(float deltaTime)
 			{
 				bullet->SetDead(true);
 				enemy->SetDead(true);
+				SpawnExplosion((enemy->GetPositionX() - 16), enemy->GetPositionY());
 				break;
-				// todo: spawn explosion
 			}
 			else if (bullet->GetPositionY() == 0)
 			{
@@ -184,10 +190,13 @@ void Game::Process(float deltaTime)
 				break;
 			}
 		}
+		if (bullet->GetPositionY() == 0)
+		{
+			bullet->SetDead(true);
+		}
 	}
 
 	// Remove any dead bullets from the container...
-
 	std::list<Bullet*>::iterator bulletIter = m_playerBullets.begin();
 	while (bulletIter != m_playerBullets.end())
 	{
@@ -217,8 +226,22 @@ void Game::Process(float deltaTime)
 		}
 	}
 
-	// W03.4: Remove any dead explosions from the container...
+	// Remove any dead explosions from the container...
+	std::list<Explosion*>::iterator explosionIter = m_explosions.begin();
+	while (explosionIter != m_explosions.end())
+	{
+		if ((*explosionIter)->IsDead())
+		{
+			delete *explosionIter;
+			explosionIter = m_explosions.erase(explosionIter);
+		}
+		else
+		{
+			++explosionIter;
+		}
+	}
 }
+
 
 void Game::Draw(BackBuffer& backBuffer)
 {
@@ -236,6 +259,12 @@ void Game::Draw(BackBuffer& backBuffer)
 	for (Bullet* bullet : m_playerBullets)
 	{
 		bullet->Draw(backBuffer);
+	}
+
+	// Draw all explosions
+	for (Explosion* explosion : m_explosions)
+	{
+		explosion->Draw(backBuffer);
 	}
 
 	// Draw the player ship...
@@ -291,4 +320,15 @@ void Game::SpawnEnemy(float x, float y)
 
 	// Add the new Enemy to the enemy container.
 	m_enemyShips.push_back(pEnemyShip);
+}
+
+void Game::SpawnExplosion(float x, float y)
+{
+	AnimatedSprite* pExplosionSprite = m_pBackBuffer->CreateAnimatedSprite("assets\\explosion.png");
+
+	Explosion* pExplosion = new Explosion();
+	pExplosion->Initialise(pExplosionSprite);
+	pExplosion->SetPosition(x, y);
+
+	m_explosions.push_back(pExplosion);
 }
