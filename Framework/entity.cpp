@@ -79,8 +79,6 @@ bool Entity::IsCollidingWith(Entity* e)
 		- e->m_pSprite->GetWidth() - m_pSprite->GetWidth();
 
 	return distanceBetweenEntities < 0;
-
-	// return (false); // W03.4 Change return value!
 }
 
 void Entity::SetDead(bool dead)

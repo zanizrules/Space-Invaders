@@ -58,6 +58,7 @@ Game::~Game()
 {
 	delete m_playerShip;
 	delete m_pBackBuffer;
+	delete m_pInputHandler;
 	m_pBackBuffer = 0;
 }
 
@@ -103,7 +104,7 @@ bool Game::Initialise()
 	m_lastTime = SDL_GetTicks();
 	m_lag = 0.0f;
 
-	return (true);
+	return true;
 }
 
 bool Game::DoGameLoop()

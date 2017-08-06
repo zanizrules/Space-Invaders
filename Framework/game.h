@@ -12,6 +12,7 @@ class PlayerShip;
 class EnemyShip;
 class Bullet;
 class Explosion;
+class ParticleEmitter;
 
 class Game
 {
@@ -68,6 +69,7 @@ protected:
 
 	// Game Entities:
 	PlayerShip* m_playerShip;
+	std::list<ParticleEmitter*> m_ParticleEmitters;
 	std::list<EnemyShip*> m_enemyShips;
 	std::list<Bullet*> m_playerBullets;
 	std::list<Explosion*> m_explosions; 

@@ -1,7 +1,37 @@
 #pragma once
 
-/*
-This class is to have a container of particle objects.
-o Clients can call a method to spawn new particles, and hence add to the container.
-oThe particle emitter must have the ability to be processed and drawn.
-*/
+#ifndef __PARTICLE_EMITTER_H__
+#define __PARTICLE_EMITTER_H__
+
+#include <list>
+
+// Forward Declarations:
+class Particle;
+class BackBuffer;
+class Particle;
+
+class ParticleEmitter
+{
+	//Member Methods:
+public:
+	ParticleEmitter();
+	~ParticleEmitter();
+
+	void Process(float deltaTime);
+	void Draw(BackBuffer& backBuffer);
+	void SpawnParticle(BackBuffer * backbuffer, float x, float y);
+	std::list<Particle*> GetParticles();
+
+protected:
+
+private:
+	ParticleEmitter(const ParticleEmitter& entity);
+
+public:
+
+private:
+	std::list<Particle*> m_particles;
+
+};
+
+#endif //__PARTICLE_EMITTER_H__

@@ -57,7 +57,7 @@ void AnimatedSprite::Process(float deltaTime)
 			m_timeElapsed -= m_frameSpeed;
 		}
 
-		// W03.4: If the current frame is greater than the number of frame in this animation...
+		// If the current frame is greater than the number of frame in this animation...
 		if (m_currentFrame > Explosion::NUMBER_OF_FRAMES)
 		{
 			// Reset to the first frame if looping.
