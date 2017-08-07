@@ -13,6 +13,8 @@ public:
 
 	bool Initialise(BackBuffer* m_pBackBuffer, float x, float y) override;
 
+	void Process(float deltaTime) override;
+
 private:
 
 

@@ -4,6 +4,7 @@
 #define ___PARTICLE_H___
 
 #include "entity.h"
+#include "Vector2D.h"
 
 class Particle : public Entity
 {
@@ -11,10 +12,14 @@ public:
 	Particle();
 	~Particle();
 
-	void Process(float deltaTime);
+	virtual void Process(float deltaTime);
 	virtual bool Initialise(BackBuffer* backbuffer, float x, float y);
 
 private:
+	Vector2D m_velocity;
+	Vector2D m_acelleration;
+	// current age
+	// maximum age
 
 
 };

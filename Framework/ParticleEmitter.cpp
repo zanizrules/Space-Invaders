@@ -20,6 +20,21 @@ void ParticleEmitter::Process(float deltaTime)
 	{
 		p->Process(deltaTime);
 	}
+
+	// Remove any dead particles from the container...
+	std::list<Particle*>::iterator particleIter = m_particles.begin();
+	while (particleIter != m_particles.end())
+	{
+		if ((*particleIter)->IsDead())
+		{
+			delete *particleIter;
+			particleIter = m_particles.erase(particleIter);
+		}
+		else
+		{
+			++particleIter;
+		}
+	}
 }
 
 void ParticleEmitter::Draw(BackBuffer& backBuffer)

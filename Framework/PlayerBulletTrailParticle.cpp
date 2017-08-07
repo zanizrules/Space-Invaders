@@ -2,16 +2,25 @@
 
 #include "backbuffer.h"
 
-// todo: add in custom processing of particles for different effects
-
 PlayerBulletTrailParticle::PlayerBulletTrailParticle()
 {
-	//Particle::Particle();
+	Particle::Particle();
 }
 
 PlayerBulletTrailParticle::~PlayerBulletTrailParticle()
 {
 	Particle::~Particle();
+}
+
+void PlayerBulletTrailParticle::Process(float deltaTime)
+{
+
+	// todo: add in custom processing of particles for different effects
+	// Updates each particle: motion, age, other effects…
+
+	// particleAccerlation -= gravity
+
+	Particle::Process(deltaTime);
 }
 
 bool PlayerBulletTrailParticle::Initialise(BackBuffer* m_pBackBuffer, float x, float y)

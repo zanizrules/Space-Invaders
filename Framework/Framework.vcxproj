@@ -100,6 +100,7 @@
     <ClInclude Include="texture.h" />
     <ClInclude Include="texturemanager.h" />
     <ClInclude Include="UserInput.h" />
+    <ClInclude Include="Vector2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AlienExplosionParticle.cpp" />
@@ -120,6 +121,7 @@
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="texturemanager.cpp" />
+    <ClCompile Include="Vector2D.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
