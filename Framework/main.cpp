@@ -12,15 +12,6 @@ int main(int argc, char* argv[])
 
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 
-	/*
-	
-	
-	{194} normal block at 0x08F92498, 20 bytes long.
-		 Data: < %M   M         > 80 25 4D 00 D0 AB 4D 00 20 00 00 00 20 00 00 00 
-	{185} normal block at 0x08FB2C58, 20 bytes long.
-		 Data: < %M   M         > 80 25 4D 00 00 AB 4D 00 20 00 00 00 20 00 00 00 
-	
-	*/
 	Game& gameInstance = Game::GetInstance();
 	if (!gameInstance.Initialise())
 	{
@@ -40,6 +31,7 @@ int main(int argc, char* argv[])
 	}
 
 	Game::DestroyInstance();
+	LogManager::DestroyInstance();
 
 	return (0);
 }

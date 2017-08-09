@@ -28,8 +28,7 @@ InputHandler::~InputHandler()
 	}
 }
 
-bool 
-InputHandler::Initialise()
+bool InputHandler::Initialise()
 {
 	int numControllers = SDL_NumJoysticks();
 
@@ -47,8 +46,7 @@ InputHandler::Initialise()
 	return (true);
 }
 
-void 
-InputHandler::ProcessInput(Game& game)
+void InputHandler::ProcessInput(Game& game)
 {
 	SDL_Event e;
 	while (SDL_PollEvent(&e) != 0)

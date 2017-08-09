@@ -26,10 +26,14 @@ LogManager::LogManager()
 
 LogManager::~LogManager()
 {
+
+}
+
+void LogManager::DestroyInstance()
+{
 	delete sm_pInstance;
 	sm_pInstance = 0;
 }
-
 
 void LogManager::Log(const char* pcMessage)
 {

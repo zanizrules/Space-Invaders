@@ -18,8 +18,13 @@ TextureManager::TextureManager()
 
 TextureManager::~TextureManager()
 {
-	//delete m_pRenderer;
-	//m_pRenderer = 0;
+	std::map<std::string, Texture*>::iterator iter;
+	for (iter = m_pLoadedTextures.begin(); 
+		iter != m_pLoadedTextures.end(); iter++)
+	{
+		delete iter->second;
+		iter->second = 0;
+	}
 }
 
 bool TextureManager::Initialise(SDL_Renderer* pRenderer)
