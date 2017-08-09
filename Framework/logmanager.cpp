@@ -9,8 +9,7 @@
 // Static Members:
 LogManager* LogManager::sm_pInstance = 0;
 
-LogManager& 
-LogManager::GetInstance()
+LogManager& LogManager::GetInstance()
 {
 	if (sm_pInstance == 0)
 	{
@@ -27,11 +26,12 @@ LogManager::LogManager()
 
 LogManager::~LogManager()
 {
-
+	delete sm_pInstance;
+	sm_pInstance = 0;
 }
 
-void 
-LogManager::Log(const char* pcMessage)
+
+void LogManager::Log(const char* pcMessage)
 {
 	OutputDebugStringA(pcMessage);
 	OutputDebugStringA("\n"); 

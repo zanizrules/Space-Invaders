@@ -69,7 +69,7 @@ protected:
 
 	// Game Entities:
 	PlayerShip* m_playerShip;
-	std::list<ParticleEmitter*> m_ParticleEmitters;
+	// std::list<ParticleEmitter*> m_ParticleEmitters; todo
 	std::list<EnemyShip*> m_enemyShips;
 	std::list<Bullet*> m_playerBullets;
 	std::list<Explosion*> m_explosions; 

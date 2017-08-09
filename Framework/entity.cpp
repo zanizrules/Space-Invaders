@@ -24,7 +24,8 @@ Entity::Entity()
 
 Entity::~Entity()
 {
-
+	delete m_pSprite;
+	m_pSprite = 0;
 }
 
 bool Entity::Initialise(Sprite* sprite)

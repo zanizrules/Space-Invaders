@@ -37,6 +37,7 @@ void Game::DestroyInstance()
 {
 	delete sm_pInstance; 
 	sm_pInstance = 0;
+
 }
 
 Game::Game()
@@ -57,21 +58,50 @@ Game::Game()
 Game::~Game()
 {
 	delete m_playerShip;
+	m_playerShip = 0;
+
 	delete m_pBackBuffer;
-	delete m_pInputHandler;
 	m_pBackBuffer = 0;
+
+	delete m_pInputHandler;
+	m_pInputHandler = 0;
+
+	for (Explosion* explosion : m_explosions)
+	{
+		delete explosion;
+		explosion = 0;
+	}
+
+	for (EnemyShip* enemy : m_enemyShips)
+	{
+		delete enemy;
+		enemy = 0;
+	}
+	for (Bullet* bullet : m_playerBullets)
+	{
+		delete bullet;
+		bullet = 0;
+	}
 }
 
 bool Game::Initialise()
 {
-	m_pBackBuffer = new BackBuffer();
+	if (m_pBackBuffer == 0)
+	{
+		m_pBackBuffer = new BackBuffer();
+	}
+
 	if (!m_pBackBuffer->Initialise(SCREEN_WIDTH, SCREEN_HEIGHT))
 	{
 		LogManager::GetInstance().Log("BackBuffer Init Fail!");
 		return (false);
 	}
 
-	m_pInputHandler = new InputHandler();
+	if (m_pInputHandler == 0)
+	{
+		m_pInputHandler = new InputHandler();
+	}
+
 	if (!m_pInputHandler->Initialise())
 	{
 		LogManager::GetInstance().Log("InputHandler Init Fail!");
@@ -298,11 +328,11 @@ void Game::StopSpaceShip()
 
 void Game::FireSpaceShipBullet()
 {
-	Sprite* pEnemySprite = m_pBackBuffer->CreateSprite("assets\\playerbullet.png");
+	Sprite* pBulletSprite = m_pBackBuffer->CreateSprite("assets\\playerbullet.png");
 
 	// Create a new bullet object.
 	Bullet* pPlayerBullet = new Bullet();
-	pPlayerBullet->Initialise(pEnemySprite);
+	pPlayerBullet->Initialise(pBulletSprite);
 	pPlayerBullet->SetVerticalVelocity(-300);
 	pPlayerBullet->SetPosition(m_playerShip->GetPositionX(), m_playerShip->GetPositionY());
 

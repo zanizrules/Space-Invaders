@@ -15,7 +15,8 @@ Explosion::Explosion()
 
 Explosion::~Explosion()
 {
-	
+	delete m_pAnimatedSprite;
+	m_pAnimatedSprite = 0;
 }
 
 void Explosion::Process(float deltaTime)
@@ -34,7 +35,10 @@ void Explosion::Process(float deltaTime)
 bool Explosion::Initialise(AnimatedSprite* sprite)
 {
 	assert(sprite);
-	m_pAnimatedSprite = sprite;
+	if (m_pAnimatedSprite == 0)
+	{
+		m_pAnimatedSprite = sprite;
+	}
 	SetFrameSize(64, 64);
 	SetAnimationSpeed(0.07f); // Delay between frames
 	return true;

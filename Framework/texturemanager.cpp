@@ -1,5 +1,4 @@
 
-
 // This include:
 #include "texturemanager.h"
 
@@ -9,6 +8,7 @@
 
 // Library includes:
 #include <SDL.h>
+#include <cassert>
 
 TextureManager::TextureManager()
 : m_pRenderer(0)
@@ -18,19 +18,18 @@ TextureManager::TextureManager()
 
 TextureManager::~TextureManager()
 {
-
+	//delete m_pRenderer;
+	//m_pRenderer = 0;
 }
 
-bool 
-TextureManager::Initialise(SDL_Renderer* pRenderer)
+bool TextureManager::Initialise(SDL_Renderer* pRenderer)
 {
 	m_pRenderer = pRenderer;
 
-	return (true);
+	return true;
 }
 
-Texture*
-TextureManager::GetTexture(const char* pcFilename)
+Texture* TextureManager::GetTexture(const char* pcFilename)
 {
 	Texture* pTexture = 0;
 

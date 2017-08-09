@@ -21,7 +21,11 @@ Texture::Texture()
 Texture::~Texture()
 {
 	SDL_DestroyTexture(m_pTexture);
+	delete m_pTexture;
 	m_pTexture = 0;
+
+	delete m_pRenderer;
+	m_pRenderer = 0;
 }
 
 bool 
@@ -47,6 +51,7 @@ Texture::Initialise(const char* pcFilename, SDL_Renderer* pRenderer)
 		}
 
 		SDL_FreeSurface(pSurface);
+
 	}
 
 	SDL_SetTextureBlendMode(m_pTexture, SDL_BLENDMODE_BLEND);
@@ -56,8 +61,7 @@ Texture::Initialise(const char* pcFilename, SDL_Renderer* pRenderer)
 	return (m_pTexture != 0);
 }
 
-int 
-Texture::GetWidth() const
+int Texture::GetWidth() const
 {
 	assert(m_width); 
 	return (m_width);
@@ -70,8 +74,8 @@ Texture::GetHeight() const
 	return (m_height);
 }
 
-SDL_Texture* 
-Texture::GetTexture()
+SDL_Texture* Texture::GetTexture()
 {
+	assert(m_pTexture);
 	return (m_pTexture);
 }

@@ -1,4 +1,5 @@
 
+#include <assert.h>
 
 // This include:
 #include "sprite.h"
@@ -22,96 +23,82 @@ Sprite::Sprite()
 
 Sprite::~Sprite()
 {
-
+	// todo: deleting texture here causes an error?
 }
 
-bool 
-Sprite::Initialise(Texture& texture)
+bool Sprite::Initialise(Texture& texture)
 {
 	m_pTexture = &texture;
 	
 	m_width = m_pTexture->GetWidth();
 	m_height = m_pTexture->GetHeight();
 
-	return (true);
+	return true;
 }
 
-void 
-Sprite::Process(float deltaTime)
+void Sprite::Process(float deltaTime)
 {
 
 }
 
-void 
-Sprite::Draw(BackBuffer& backbuffer)
+void Sprite::Draw(BackBuffer& backbuffer)
 {
 	backbuffer.DrawSprite(*this);
 }
 
-void 
-Sprite::SetX(int x)
+void Sprite::SetX(int x)
 {
 	m_x = x;
 }
 
-void 
-Sprite::SetY(int y)
+void Sprite::SetY(int y)
 {
 	m_y = y;
 }
 
-int
-Sprite::GetX() const
+int Sprite::GetX() const
 {
 	return (m_x);
 }
 
-int
-Sprite::GetY() const
+int Sprite::GetY() const
 {
 	return (m_y);
 }
 
-void
-Sprite::SetAngle(float angle)
+void Sprite::SetAngle(float angle)
 {
 	m_angle = angle;
 }
 
-float
-Sprite::GetAngle() const
+float Sprite::GetAngle() const
 {
 	return (m_angle);
 }
 
-void
-Sprite::SetCenter(int x, int y)
+void Sprite::SetCenter(int x, int y)
 {
 	m_centerX = x;
 	m_centerY = y;
 }
 
-void
-Sprite::SetHandleCenter()
+void Sprite::SetHandleCenter()
 {
 	m_centerX = m_width / 2; 
 	m_centerY = m_height / 2;
 }
 
-Texture* 
-Sprite::GetTexture()
+Texture* Sprite::GetTexture()
 {
 	return (m_pTexture);
 }
 
-int 
-Sprite::GetWidth() const
+int Sprite::GetWidth() const
 {
 	return (m_width);
 }
 
-int
-Sprite::GetHeight() const
+int Sprite::GetHeight() const
 {
 	return (m_height);
 }

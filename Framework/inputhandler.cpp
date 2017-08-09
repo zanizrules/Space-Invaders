@@ -1,5 +1,4 @@
 
-
 // This include:
 #include "inputhandler.h"
 
@@ -24,6 +23,7 @@ InputHandler::~InputHandler()
 	if (m_pGameController)
 	{
 		SDL_JoystickClose(m_pGameController);
+		delete m_pGameController;
 		m_pGameController = 0;
 	}
 }

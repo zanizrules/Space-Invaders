@@ -22,7 +22,7 @@ AnimatedSprite::AnimatedSprite()
 
 AnimatedSprite::~AnimatedSprite()
 {
-
+	Sprite::~Sprite();
 }
 
 bool AnimatedSprite::Initialise(Texture& texture)
