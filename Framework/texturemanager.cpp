@@ -45,6 +45,8 @@ Texture* TextureManager::GetTexture(const char* pcFilename)
 		if (!pTexture->Initialise(pcFilename, m_pRenderer))
 		{
 			LogManager::GetInstance().Log("Texture failed to initialise!");
+			delete pTexture;
+			return false;
 		}
 		
 		m_pLoadedTextures[pcFilename] = pTexture;

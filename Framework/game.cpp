@@ -11,12 +11,15 @@
 #include "EnemyShip.h"
 #include "Bullet.h"
 #include "Explosion.h"
+#include "ParticleEmitter.h"
+#include "AlienExplosionParticle.h"
 
 // Library includes:
 #include <cassert>
 #include <SDL.h>
 #include <cstdio>
 #include <algorithm>
+#include <math.h>
 
 // Static Members:
 Game* Game::sm_pInstance = 0;
@@ -66,6 +69,9 @@ Game::~Game()
 	delete m_pInputHandler;
 	m_pInputHandler = 0;
 
+	delete m_ParticleEmitters;
+	m_ParticleEmitters = 0;
+
 	for (Explosion* explosion : m_explosions)
 	{
 		delete explosion;
@@ -114,6 +120,9 @@ bool Game::Initialise()
 	// Create the player ship instance.
 	m_playerShip = new PlayerShip();
 	m_playerShip->Initialise(pPlayerSprite);
+
+	// Create the explosion particle emitter
+	m_ParticleEmitters = new ParticleEmitter();
 
 	// Spawn four rows of alien enemies.
 	float paddingFromEdge = (Game::SCREEN_WIDTH / 100) * 3;
@@ -199,6 +208,8 @@ void Game::Process(float deltaTime)
 		explosion->Process(deltaTime);
 	}
 
+	m_ParticleEmitters->Process(deltaTime);
+
 	// Update player...
 	m_playerShip->Process(deltaTime);
 
@@ -212,7 +223,8 @@ void Game::Process(float deltaTime)
 			{
 				bullet->SetDead(true);
 				enemy->SetDead(true);
-				SpawnExplosion((enemy->GetPositionX() - 16), enemy->GetPositionY());
+				SpawnExplosion((enemy->GetPositionX() - 16), (enemy->GetPositionY() -16));
+				CreateParticleExplosion((enemy->GetPositionX() + 16), (enemy->GetPositionY() + 16), 32);
 				break;
 			}
 			else if (bullet->GetPositionY() == 0)
@@ -298,6 +310,8 @@ void Game::Draw(BackBuffer& backBuffer)
 		explosion->Draw(backBuffer);
 	}
 
+	m_ParticleEmitters->Draw(backBuffer);
+
 	// Draw the player ship...
 	m_playerShip->Draw(backBuffer);
 	
@@ -362,4 +376,22 @@ void Game::SpawnExplosion(float x, float y)
 	pExplosion->SetPosition(x, y);
 
 	m_explosions.push_back(pExplosion);
+}
+
+void Game::CreateParticleExplosion(float x, float y, float r)
+{
+	for (int i = 0; i < 10; i++)
+	{
+		AlienExplosionParticle* pExplosionParticle = new AlienExplosionParticle();
+		pExplosionParticle->Initialise(m_pBackBuffer, x, y);
+		//float degrees = (360 / 10) * i; Use * M_PI) / 180 to convert to radians
+		float radians = ((2 * M_PI) / 10) * i;
+		pExplosionParticle->AddVelocity(r * cos(radians), r * sin(radians));
+
+		m_ParticleEmitters->SpawnParticle(pExplosionParticle);
+	}
+	
+
+
+
 }

@@ -15,13 +15,18 @@ public:
 	virtual void Process(float deltaTime);
 	virtual bool Initialise(BackBuffer* backbuffer, float x, float y);
 
+	void AddVelocity(float x, float y);
+	void AgeParticle(float amount);
+	void AddAcelleration(float x, float y);
+	void StopAccelerating();
+	virtual float GetMaxAge();
+
+	Vector2D Acelleration();
+
+
 private:
-	Vector2D m_velocity;
 	Vector2D m_acelleration;
-	// current age
-	// maximum age
-
-
+	float m_age;
 };
 
 #endif // ___PARTICLE_H___

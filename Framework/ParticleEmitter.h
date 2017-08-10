@@ -19,7 +19,7 @@ public:
 
 	void Process(float deltaTime);
 	void Draw(BackBuffer& backBuffer);
-	void SpawnParticle(BackBuffer * backbuffer, float x, float y);
+	void SpawnParticle(Particle * pParticle);
 	std::list<Particle*> GetParticles();
 
 protected:

@@ -33,6 +33,8 @@ public:
 
 	void SpawnEnemy(float x, float y);
 	void SpawnExplosion(float x, float y);
+
+	void CreateParticleExplosion(float x, float y, float r);
 	
 protected:
 	void Process(float deltaTime);
@@ -69,7 +71,7 @@ protected:
 
 	// Game Entities:
 	PlayerShip* m_playerShip;
-	// std::list<ParticleEmitter*> m_ParticleEmitters; todo
+	ParticleEmitter* m_ParticleEmitters;
 	std::list<EnemyShip*> m_enemyShips;
 	std::list<Bullet*> m_playerBullets;
 	std::list<Explosion*> m_explosions; 

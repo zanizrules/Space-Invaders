@@ -22,9 +22,22 @@ void AlienExplosionParticle::Process(float deltaTime)
 	// Acceleration changes velocity over time (delta velocity)
 	// Velocity changes position over time(delta position)
 	// particleVelocity += particleAcceleration * dt
-	// And : particlePosition += particleVelocity * dt
+	// particlePosition += particleVelocity * dt
+
+	m_x += m_velocityX * deltaTime;
+	m_y += m_velocityY * deltaTime;
 
 	Particle::Process(deltaTime);
+
+	if (deltaTime > m_maxage)
+	{
+		SetDead(true);
+	}
+}
+
+float AlienExplosionParticle::GetMaxAge()
+{
+	return m_maxage;
 }
 
 bool AlienExplosionParticle::Initialise(BackBuffer* m_pBackBuffer, float x, float y)

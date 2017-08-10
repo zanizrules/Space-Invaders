@@ -45,11 +45,8 @@ void ParticleEmitter::Draw(BackBuffer& backBuffer)
 	}
 }
 
-void ParticleEmitter::SpawnParticle(BackBuffer* backbuffer, float x, float y)
+void ParticleEmitter::SpawnParticle(Particle* pParticle)
 {
-	Particle* pParticle = new Particle();
-	pParticle->Initialise(backbuffer, x, y);
-
 	m_particles.push_back(pParticle);
 }
 
