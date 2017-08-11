@@ -1,6 +1,8 @@
 #include "Particle.h"
 
 Particle::Particle()
+: m_age(0),
+m_acelleration()
 {
 	Entity::Entity();
 }
@@ -41,9 +43,9 @@ void Particle::StopAccelerating()
 {
 }
 
-float Particle::GetMaxAge()
+float Particle::GetAge()
 {
-	return 0.0f;
+	return m_age;
 }
 
 Vector2D Particle::Acelleration()

@@ -19,7 +19,7 @@ public:
 	void AgeParticle(float amount);
 	void AddAcelleration(float x, float y);
 	void StopAccelerating();
-	virtual float GetMaxAge();
+	float GetAge();
 
 	Vector2D Acelleration();
 

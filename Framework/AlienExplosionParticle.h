@@ -15,9 +15,8 @@ public:
 
 	void Process(float deltaTime) override;
 
-	float GetMaxAge();
-
-	const float m_maxage = 0.05f;
+	const float m_maxage = 0.5f; // todo make sure this is being used
+	const float m_startAcceleration = 3.0f;
 
 private:
 

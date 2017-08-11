@@ -390,8 +390,4 @@ void Game::CreateParticleExplosion(float x, float y, float r)
 
 		m_ParticleEmitters->SpawnParticle(pExplosionParticle);
 	}
-	
-
-
-
 }

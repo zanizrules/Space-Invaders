@@ -3,10 +3,14 @@
 #include "Particle.h"
 #include "entity.h"
 #include "backbuffer.h"
+#include "logmanager.h"
+
+#include <string>
 
 AlienExplosionParticle::AlienExplosionParticle()
 {
 	Particle::Particle();
+	AddAcelleration(m_startAcceleration, m_startAcceleration);
 }
 
 AlienExplosionParticle::~AlienExplosionParticle()
@@ -16,28 +20,21 @@ AlienExplosionParticle::~AlienExplosionParticle()
 
 void AlienExplosionParticle::Process(float deltaTime)
 {
-	
-	// todo: add in custom processing of particles for different effects
-	// Updates each particle: motion, age, other effects…
-	// Acceleration changes velocity over time (delta velocity)
-	// Velocity changes position over time(delta position)
-	// particleVelocity += particleAcceleration * dt
-	// particlePosition += particleVelocity * dt
 
+	if (GetAge() > m_maxage)
+	{
+		SetDead(true);
+	}
+
+	// particleVelocity += particleAcceleration * dt
+	m_velocityX += m_velocityX * Acelleration().m_x * deltaTime;
+	m_velocityY += m_velocityY * Acelleration().m_y * deltaTime;
+
+	// particlePosition += particleVelocity * dt
 	m_x += m_velocityX * deltaTime;
 	m_y += m_velocityY * deltaTime;
 
 	Particle::Process(deltaTime);
-
-	if (deltaTime > m_maxage)
-	{
-		SetDead(true);
-	}
-}
-
-float AlienExplosionParticle::GetMaxAge()
-{
-	return m_maxage;
 }
 
 bool AlienExplosionParticle::Initialise(BackBuffer* m_pBackBuffer, float x, float y)

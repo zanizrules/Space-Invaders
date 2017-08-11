@@ -1,5 +1,6 @@
 #include "ParticleEmitter.h"
 #include "Particle.h"
+#include "game.h"
 
 ParticleEmitter::ParticleEmitter()
 {
@@ -25,6 +26,17 @@ void ParticleEmitter::Process(float deltaTime)
 	std::list<Particle*>::iterator particleIter = m_particles.begin();
 	while (particleIter != m_particles.end())
 	{
+
+		// Kill particle if outside of the screen
+		(*particleIter)->SetDead(
+			(*particleIter)->GetPositionX() <= 0
+			|| (*particleIter)->GetPositionX() >= Game::SCREEN_WIDTH - 8
+			|| (*particleIter)->GetPositionY() <= 0
+			|| (*particleIter)->GetPositionY() >= Game::SCREEN_HEIGHT - 8
+			//	|| (*particleIter)->GetHorizontalVelocity() == 0
+			//	|| (*particleIter)->GetVerticalVelocity() == 0);
+		);
+
 		if ((*particleIter)->IsDead())
 		{
 			delete *particleIter;

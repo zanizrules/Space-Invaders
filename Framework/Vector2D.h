@@ -5,9 +5,11 @@
 
 class Vector2D
 {
+
+public:
 	float m_x;
 	float m_y;
-public:
+
 	float getLength();
 	static float dot(float a, float b);
 	void Add(float x, float y);
