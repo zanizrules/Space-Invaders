@@ -98,6 +98,7 @@
     <ClInclude Include="PlayerBulletTrailParticle.h" />
     <ClInclude Include="PlayerMissile.h" />
     <ClInclude Include="PlayerShip.h" />
+    <ClInclude Include="RechargeIndicator.h" />
     <ClInclude Include="SmallStarParticle.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="texture.h" />
@@ -123,6 +124,7 @@
     <ClCompile Include="PlayerBulletTrailParticle.cpp" />
     <ClCompile Include="PlayerMissile.cpp" />
     <ClCompile Include="PlayerShip.cpp" />
+    <ClCompile Include="RechargeIndicator.cpp" />
     <ClCompile Include="SmallStarParticle.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="texture.cpp" />

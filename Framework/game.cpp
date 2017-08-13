@@ -17,6 +17,7 @@
 #include "SmallStarParticle.h"
 #include "BigStarParticle.h"
 #include "PlayerMissile.h"
+#include "RechargeIndicator.h"
 
 
 // Library includes:
@@ -60,6 +61,8 @@ Game::Game()
 , m_numUpdates(0)
 , m_lastTime(0)
 , m_lag(0)
+, m_missileTimer(0)
+, m_allowMissileFire(true)
 {
 	srand((unsigned int)time(0));
 }
@@ -98,6 +101,11 @@ Game::~Game()
 	{
 		delete missile;
 		missile = 0;
+	}
+	for (int i = 0; i < 7; i++)
+	{
+		delete m_rechargeIndicators[i];
+		m_rechargeIndicators[i] = 0;
 	}
 }
 
@@ -138,20 +146,29 @@ bool Game::Initialise()
 	m_playerShip = new PlayerShip();
 	m_playerShip->Initialise(pPlayerSprite);
 
+	for (int i = 0; i < 7; i++)
+	{
+		Sprite* pRechargeSprite = m_pBackBuffer->CreateSprite("assets\\recharge.png");
+		m_rechargeIndicators[i] = new RechargeIndicator();
+		m_rechargeIndicators[i]->Initialise(pRechargeSprite);
+		m_rechargeIndicators[i]->SetPositionY(SCREEN_HEIGHT - 25);
+		m_rechargeIndicators[i]->SetPositionX(10 + i * 25);
+	}
+
 	// Spawn four rows of alien enemies.
-	float paddingFromEdge = (Game::SCREEN_WIDTH / 100) * 3;
+	float paddingFromEdge = (SCREEN_WIDTH / 100) * 3;
 	float shipSpacing = 10;
 	float y = shipSpacing;
 
-	for (int i = 0; i < Game::ENEMY_ROWS; i++)
+	for (int i = 0; i < ENEMY_ROWS; i++)
 	{
 		float x = paddingFromEdge;
-		while (x < (Game::SCREEN_WIDTH - paddingFromEdge))
+		while (x < (SCREEN_WIDTH - paddingFromEdge))
 		{
 			SpawnEnemy(x, y);
-			x += (Game::SHIP_SIZE + shipSpacing);
+			x += (SHIP_SIZE + shipSpacing);
 		}
-		y += (Game::SHIP_SIZE + shipSpacing);
+		y += (SHIP_SIZE + shipSpacing);
 	}
 
 	m_lastTime = SDL_GetTicks();
@@ -198,14 +215,21 @@ void Game::Process(float deltaTime)
 {
 	// Count total simulation time elapsed:
 	m_elapsedSeconds += deltaTime;
+	m_missileTimer += deltaTime;
 
 	// Frame Counter:
+	if (m_missileTimer > 7 && !m_allowMissileFire)
+	{
+		m_allowMissileFire = true;
+		m_missileTimer = 0;
+	}
 	if (m_elapsedSeconds > 1)
 	{
 		m_elapsedSeconds -= 1;
 		m_FPS = m_frameCount;
 		m_frameCount = 0;
 	}
+	
 
 	// Update the game world simulation:
 
@@ -392,6 +416,18 @@ void Game::Draw(BackBuffer& backBuffer)
 
 	// Draw the player ship...
 	m_playerShip->Draw(backBuffer);
+
+	if (m_allowMissileFire || m_missileTimer > 7)
+	{
+		m_missileTimer = 7;
+	}
+	for (int i = 0; i < m_missileTimer; i++)
+	{
+		if (i <= m_missileTimer-1)
+		{
+			m_rechargeIndicators[i]->Draw(backBuffer);
+		}
+	}
 	
 	backBuffer.Present();
 }
@@ -472,16 +508,21 @@ void Game::CreateParticleExplosion(float x, float y, float r)
 
 void Game::FirePlayerMissile(int endX, int endY)
 {
-	PlayerMissile* pPlayerMissile = new PlayerMissile(
-		m_playerShip->GetPositionX(), endX,
-		m_playerShip->GetPositionY(), endY);
+	if (m_allowMissileFire)
+	{
+		PlayerMissile* pPlayerMissile = new PlayerMissile(
+			m_playerShip->GetPositionX(), endX,
+			m_playerShip->GetPositionY(), endY);
 
-	Sprite* pMissileSprite = m_pBackBuffer->CreateSprite("assets\\playermissile.png");
+		Sprite* pMissileSprite = m_pBackBuffer->CreateSprite("assets\\playermissile.png");
 
-	pPlayerMissile->Initialise(pMissileSprite);
-	pPlayerMissile->SetPosition(m_playerShip->GetPositionX(), m_playerShip->GetPositionY());
+		pPlayerMissile->Initialise(pMissileSprite);
+		pPlayerMissile->SetPosition(m_playerShip->GetPositionX(), m_playerShip->GetPositionY());
 
-	m_playerMissiles.push_back(pPlayerMissile);
+		m_playerMissiles.push_back(pPlayerMissile);
+		m_allowMissileFire = false;
+		m_missileTimer = 0;
+	}
 }
 
 void Game::GenerateStars()

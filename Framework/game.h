@@ -14,6 +14,7 @@ class Bullet;
 class Explosion;
 class ParticleEmitter;
 class PlayerMissile;
+class RechargeIndicator;
 
 class Game
 {
@@ -55,7 +56,7 @@ private:
 public:
 	static const int SCREEN_WIDTH = 800;
 	static const int SCREEN_HEIGHT = 600;
-	static const int ENEMY_ROWS = 4;
+	static const int ENEMY_ROWS = 6;
 	static const int SHIP_SIZE = 32;
 
 protected:
@@ -79,8 +80,13 @@ protected:
 	ParticleEmitter* m_ParticleEmitter;
 	std::list<EnemyShip*> m_enemyShips;
 	std::list<Bullet*> m_playerBullets;
+	std::list<Explosion*> m_explosions;
+
 	std::list<PlayerMissile*> m_playerMissiles;
-	std::list<Explosion*> m_explosions; 
+	float m_missileTimer;
+	bool m_allowMissileFire;
+
+	RechargeIndicator* m_rechargeIndicators[7];
 
 private:
 	
