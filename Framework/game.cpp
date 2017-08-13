@@ -18,7 +18,7 @@
 #include "BigStarParticle.h"
 #include "PlayerMissile.h"
 #include "RechargeIndicator.h"
-
+#include "fmod.hpp"
 
 // Library includes:
 #include <cassert>
@@ -63,6 +63,7 @@ Game::Game()
 , m_lag(0)
 , m_missileTimer(0)
 , m_allowMissileFire(true)
+, m_fmodSystem(0)
 {
 	srand((unsigned int)time(0));
 }
@@ -107,10 +108,29 @@ Game::~Game()
 		delete m_rechargeIndicators[i];
 		m_rechargeIndicators[i] = 0;
 	}
+
+	m_bulletSound->release();
+	m_explosionSound->release();
+	m_missileSound->release();
+	m_detonationSound->release();
+
+	m_fmodSystem->close();
+	m_fmodSystem->release();
 }
 
 bool Game::Initialise()
 {
+	if (m_fmodSystem == 0)
+	{
+		FMOD::System_Create(&m_fmodSystem);
+		m_fmodSystem->init(32, FMOD_INIT_NORMAL, 0);
+		m_fmodSystem->createSound("assets\\bullet.wav", FMOD_DEFAULT, 0, &m_bulletSound);
+		m_fmodSystem->createSound("assets\\explosion.wav", FMOD_DEFAULT, 0, &m_explosionSound);
+		m_fmodSystem->createSound("assets\\missile.wav", FMOD_DEFAULT, 0, &m_missileSound);
+		m_fmodSystem->createSound("assets\\detonation.wav", FMOD_DEFAULT, 0, &m_detonationSound);
+		m_channel = 0;
+	}
+
 	if (m_pBackBuffer == 0)
 	{
 		m_pBackBuffer = new BackBuffer();
@@ -152,7 +172,7 @@ bool Game::Initialise()
 		m_rechargeIndicators[i] = new RechargeIndicator();
 		m_rechargeIndicators[i]->Initialise(pRechargeSprite);
 		m_rechargeIndicators[i]->SetPositionY(SCREEN_HEIGHT - 25);
-		m_rechargeIndicators[i]->SetPositionX(10 + i * 25);
+		m_rechargeIndicators[i]->SetPositionX((float)(10 + i * 25));
 	}
 
 	// Spawn four rows of alien enemies.
@@ -298,6 +318,7 @@ void Game::Process(float deltaTime)
 		
 		if (missile->m_explode)
 		{
+			m_fmodSystem->playSound(m_detonationSound, 0, false, &m_channel);
 			for (EnemyShip* enemy : m_enemyShips)
 			{
 				// If collided, destory both and spawn explosion.
@@ -466,6 +487,7 @@ void Game::FireSpaceShipBullet()
 
 	// Add the new bullet to the bullet container.
 	m_playerBullets.push_back(pPlayerBullet);
+	m_fmodSystem->playSound(m_bulletSound, 0, false, &m_channel);
 }
 
 void Game::SpawnEnemy(float x, float y)
@@ -490,6 +512,7 @@ void Game::SpawnExplosion(float x, float y)
 	pExplosion->SetPosition(x, y);
 
 	m_explosions.push_back(pExplosion);
+	m_fmodSystem->playSound(m_explosionSound, 0, false, &m_channel);
 }
 
 void Game::CreateParticleExplosion(float x, float y, float r)
@@ -506,7 +529,7 @@ void Game::CreateParticleExplosion(float x, float y, float r)
 	}
 }
 
-void Game::FirePlayerMissile(int endX, int endY)
+void Game::FirePlayerMissile(float endX, float endY)
 {
 	if (m_allowMissileFire)
 	{
@@ -522,6 +545,7 @@ void Game::FirePlayerMissile(int endX, int endY)
 		m_playerMissiles.push_back(pPlayerMissile);
 		m_allowMissileFire = false;
 		m_missileTimer = 0;
+		m_fmodSystem->playSound(m_missileSound, 0, false, &m_channel);
 	}
 }
 

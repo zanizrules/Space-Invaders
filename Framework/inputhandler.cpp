@@ -133,7 +133,7 @@ void InputHandler::ProcessInput(Game& game)
 			{
 				if (e.jaxis.value > 8000 || e.jaxis.value < -8000)
 				{
-					m_velocityX = e.jaxis.value / 50;
+					m_velocityX = e.jaxis.value / 50.0f;
 				}
 				else
 				{
@@ -144,7 +144,7 @@ void InputHandler::ProcessInput(Game& game)
 			{
 				if (e.jaxis.value > 8000 || e.jaxis.value < -8000)
 				{
-					m_velocityY = e.jaxis.value / 50;
+					m_velocityY = e.jaxis.value / 50.0f;
 				}
 				else
 				{

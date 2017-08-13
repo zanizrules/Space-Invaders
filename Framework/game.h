@@ -4,6 +4,8 @@
 
 #include <list>
 
+#include "fmod.hpp"
+
 // Forward Declarations
 class BackBuffer;
 class InputHandler;
@@ -38,7 +40,7 @@ public:
 
 	void CreateParticleExplosion(float x, float y, float r);
 
-	void FirePlayerMissile(int endX, int endY);
+	void FirePlayerMissile(float endX, float endY);
 
 	void GenerateStars();
 	
@@ -85,8 +87,15 @@ protected:
 	std::list<PlayerMissile*> m_playerMissiles;
 	float m_missileTimer;
 	bool m_allowMissileFire;
-
 	RechargeIndicator* m_rechargeIndicators[7];
+
+	// FMOD
+	FMOD::System* m_fmodSystem;
+	FMOD::Channel* m_channel;
+	FMOD::Sound* m_bulletSound;
+	FMOD::Sound* m_explosionSound;
+	FMOD::Sound* m_missileSound;
+	FMOD::Sound* m_detonationSound;
 
 private:
 	
