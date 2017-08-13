@@ -16,6 +16,8 @@
 #include "PlayerBulletTrailParticle.h"
 #include "SmallStarParticle.h"
 #include "BigStarParticle.h"
+#include "PlayerMissile.h"
+
 
 // Library includes:
 #include <cassert>
@@ -91,6 +93,11 @@ Game::~Game()
 	{
 		delete bullet;
 		bullet = 0;
+	}
+	for (PlayerMissile* missile : m_playerMissiles)
+	{
+		delete missile;
+		missile = 0;
 	}
 }
 
@@ -220,6 +227,10 @@ void Game::Process(float deltaTime)
 			m_ParticleEmitter->SpawnParticle(pBulletParticle);
 		}
 	}
+	for (PlayerMissile* missile : m_playerMissiles)
+	{
+		missile->Process(deltaTime);
+	}
 
 	for (Explosion* explosion : m_explosions)
 	{
@@ -234,26 +245,49 @@ void Game::Process(float deltaTime)
 	// Check for bullet vs alien enemy collisions...
 	for (Bullet* bullet : m_playerBullets)
 	{
-		for (EnemyShip* enemy : m_enemyShips)
-		{
-			// If collided, destory both and spawn explosion.
-			if (bullet->IsCollidingWith(enemy))
-			{
-				bullet->SetDead(true);
-				enemy->SetDead(true);
-				SpawnExplosion((enemy->GetPositionX() - 16), (enemy->GetPositionY() -16));
-				CreateParticleExplosion((enemy->GetPositionX() + 16), (enemy->GetPositionY() + 16), 32);
-				break;
-			}
-			else if (bullet->GetPositionY() == 0)
-			{
-				bullet->SetDead(true);
-				break;
-			}
-		}
 		if (bullet->GetPositionY() == 0)
 		{
 			bullet->SetDead(true);
+		}
+		else
+		{
+			for (EnemyShip* enemy : m_enemyShips)
+			{
+				// If collided, destory both and spawn explosion.
+				if (bullet->IsCollidingWith(enemy))
+				{
+					bullet->SetDead(true);
+					enemy->SetDead(true);
+					SpawnExplosion((enemy->GetPositionX() - 16), (enemy->GetPositionY() - 16));
+					CreateParticleExplosion((enemy->GetPositionX() + 16), (enemy->GetPositionY() + 16), 32);
+					break;
+				}
+			}
+		}
+	}
+
+	// Check for missile vs alien enemy collisions...
+	for (PlayerMissile* missile : m_playerMissiles)
+	{
+		if (missile->GetPositionY() == 0
+			|| missile->GetPositionX() == 0
+			|| missile->GetPositionX() == SCREEN_WIDTH - 16)
+		{
+			missile->SetDead(true);
+		}
+		else if (missile->m_explode)
+		{
+			for (EnemyShip* enemy : m_enemyShips)
+			{
+				// If collided, destory both and spawn explosion.
+				if (missile->IsCollidingWith(enemy))
+				{
+					enemy->SetDead(true);
+					SpawnExplosion((enemy->GetPositionX() - 16), (enemy->GetPositionY() - 16));
+					CreateParticleExplosion((enemy->GetPositionX() + 16), (enemy->GetPositionY() + 16), 32);
+				}
+			}
+			missile->SetDead(true);
 		}
 	}
 
@@ -269,6 +303,21 @@ void Game::Process(float deltaTime)
 		else
 		{
 			++bulletIter;
+		}
+	}
+
+	// Remove any dead missiles from the container...
+	std::list<PlayerMissile*>::iterator missileIter = m_playerMissiles.begin();
+	while (missileIter != m_playerMissiles.end())
+	{
+		if ((*missileIter)->IsDead())
+		{
+			delete *missileIter;
+			missileIter = m_playerMissiles.erase(missileIter);
+		}
+		else
+		{
+			++missileIter;
 		}
 	}
 
@@ -322,6 +371,11 @@ void Game::Draw(BackBuffer& backBuffer)
 	for (Bullet* bullet : m_playerBullets)
 	{
 		bullet->Draw(backBuffer);
+	}
+
+	for (PlayerMissile* missile : m_playerMissiles)
+	{
+		missile->Draw(backBuffer);
 	}
 
 	// Draw all explosions
@@ -408,6 +462,20 @@ void Game::CreateParticleExplosion(float x, float y, float r)
 
 		m_ParticleEmitter->SpawnParticle(pExplosionParticle);
 	}
+}
+
+void Game::FirePlayerMissile(int endX, int endY)
+{
+	PlayerMissile* pPlayerMissile = new PlayerMissile(
+		m_playerShip->GetPositionX(), endX,
+		m_playerShip->GetPositionY(), endY);
+
+	Sprite* pMissileSprite = m_pBackBuffer->CreateSprite("assets\\playermissile.png");
+
+	pPlayerMissile->Initialise(pMissileSprite);
+	pPlayerMissile->SetPosition(m_playerShip->GetPositionX(), m_playerShip->GetPositionY());
+
+	m_playerMissiles.push_back(pPlayerMissile);
 }
 
 void Game::GenerateStars()

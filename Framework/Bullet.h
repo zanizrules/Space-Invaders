@@ -11,6 +11,8 @@ public:
 	Bullet();
 	~Bullet();
 
+	bool IsCollidingWith(Entity * e);
+
 	void Process(float deltaTime);
 
 private:

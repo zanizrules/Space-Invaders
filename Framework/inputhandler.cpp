@@ -51,14 +51,15 @@ void InputHandler::ProcessInput(Game& game)
 	SDL_Event e;
 	while (SDL_PollEvent(&e) != 0)
 	{
-
-		if (e.type == SDL_KEYDOWN && e.key.keysym.scancode == SDL_SCANCODE_SPACE)
+		if (e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT)
+		{
+			game.FirePlayerMissile(e.button.x, e.button.y);
+		}
+		else if (e.type == SDL_KEYUP && e.key.keysym.scancode == SDL_SCANCODE_SPACE)
 		{
 			game.FireSpaceShipBullet();
 		}
-
-
-		if (e.type == SDL_QUIT)
+		else if (e.type == SDL_QUIT)
 		{
 			game.Quit();
 		}

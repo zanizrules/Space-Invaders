@@ -21,7 +21,7 @@ public:
 	void SetDead(bool dead);
 	bool IsDead() const;
 
-	bool IsCollidingWith(Entity* e);
+	bool IsCollidingWith(Entity* e, float distance);
 
 	void SetPosition(float x, float y);
 	void SetPositionX(float x);

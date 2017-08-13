@@ -69,7 +69,7 @@ void Entity::Draw(BackBuffer& backBuffer)
 	m_pSprite->Draw(backBuffer);
 }
 
-bool Entity::IsCollidingWith(Entity* e)
+bool Entity::IsCollidingWith(Entity* e, float distance)
 {
 	// Generic Entity Collision routine.
 
@@ -79,7 +79,7 @@ bool Entity::IsCollidingWith(Entity* e)
 		+ pow(e->GetPositionY() - GetPositionY(), 2))
 		- e->m_pSprite->GetWidth() - m_pSprite->GetWidth();
 
-	return distanceBetweenEntities < 0;
+	return distanceBetweenEntities < distance;
 }
 
 void Entity::SetDead(bool dead)

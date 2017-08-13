@@ -96,6 +96,7 @@
     <ClInclude Include="Particle.h" />
     <ClInclude Include="ParticleEmitter.h" />
     <ClInclude Include="PlayerBulletTrailParticle.h" />
+    <ClInclude Include="PlayerMissile.h" />
     <ClInclude Include="PlayerShip.h" />
     <ClInclude Include="SmallStarParticle.h" />
     <ClInclude Include="sprite.h" />
@@ -120,6 +121,7 @@
     <ClCompile Include="Particle.cpp" />
     <ClCompile Include="ParticleEmitter.cpp" />
     <ClCompile Include="PlayerBulletTrailParticle.cpp" />
+    <ClCompile Include="PlayerMissile.cpp" />
     <ClCompile Include="PlayerShip.cpp" />
     <ClCompile Include="SmallStarParticle.cpp" />
     <ClCompile Include="sprite.cpp" />

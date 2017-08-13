@@ -13,6 +13,7 @@ class EnemyShip;
 class Bullet;
 class Explosion;
 class ParticleEmitter;
+class PlayerMissile;
 
 class Game
 {
@@ -35,6 +36,8 @@ public:
 	void SpawnExplosion(float x, float y);
 
 	void CreateParticleExplosion(float x, float y, float r);
+
+	void FirePlayerMissile(int endX, int endY);
 
 	void GenerateStars();
 	
@@ -76,6 +79,7 @@ protected:
 	ParticleEmitter* m_ParticleEmitter;
 	std::list<EnemyShip*> m_enemyShips;
 	std::list<Bullet*> m_playerBullets;
+	std::list<PlayerMissile*> m_playerMissiles;
 	std::list<Explosion*> m_explosions; 
 
 private:
