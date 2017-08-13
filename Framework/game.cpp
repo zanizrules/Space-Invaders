@@ -119,7 +119,7 @@ bool Game::Initialise()
 		m_pInputHandler = new InputHandler();
 	}
 
-	if (!m_pInputHandler->Initialise())
+	if (!m_pInputHandler->Initialise(m_pBackBuffer))
 	{
 		LogManager::GetInstance().Log("InputHandler Init Fail!");
 		return (false);
@@ -237,6 +237,8 @@ void Game::Process(float deltaTime)
 		explosion->Process(deltaTime);
 	}
 
+	m_pInputHandler->Process(deltaTime);
+
 	m_ParticleEmitter->Process(deltaTime);
 
 	// Update player...
@@ -269,13 +271,8 @@ void Game::Process(float deltaTime)
 	// Check for missile vs alien enemy collisions...
 	for (PlayerMissile* missile : m_playerMissiles)
 	{
-		if (missile->GetPositionY() == 0
-			|| missile->GetPositionX() == 0
-			|| missile->GetPositionX() == SCREEN_WIDTH - 16)
-		{
-			missile->SetDead(true);
-		}
-		else if (missile->m_explode)
+		
+		if (missile->m_explode)
 		{
 			for (EnemyShip* enemy : m_enemyShips)
 			{
@@ -287,6 +284,12 @@ void Game::Process(float deltaTime)
 					CreateParticleExplosion((enemy->GetPositionX() + 16), (enemy->GetPositionY() + 16), 32);
 				}
 			}
+			missile->SetDead(true);
+		}
+		else if (missile->GetPositionY() == 0
+			|| missile->GetPositionX() == 0
+			|| missile->GetPositionX() == SCREEN_WIDTH - 16)
+		{
 			missile->SetDead(true);
 		}
 	}
@@ -358,6 +361,9 @@ void Game::Draw(BackBuffer& backBuffer)
 	++m_frameCount;
 
 	backBuffer.Clear();
+
+	// Draw missile target
+	m_pInputHandler->Draw(backBuffer);
 
 	m_ParticleEmitter->Draw(backBuffer);
 

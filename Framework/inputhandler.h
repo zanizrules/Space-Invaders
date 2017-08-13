@@ -5,17 +5,20 @@
 // Library includes:
 #include <SDL.h>
 
+#include "entity.h"
+
 // Forward Declarations:
 class Game;
 
-class InputHandler
+class InputHandler : public Entity
 {
 	//Member Methods:
 public:
 	InputHandler();
 	~InputHandler();
 
-	bool Initialise();
+	bool Initialise(BackBuffer * m_pBackBuffer);
+
 	void ProcessInput(Game& game);
 
 protected:

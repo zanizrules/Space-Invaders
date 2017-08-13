@@ -6,6 +6,9 @@
 #include "game.h"
 #include "logmanager.h"
 #include "UserInput.h"
+#include "entity.h"
+#include "sprite.h"
+#include "backbuffer.h"
 
 // Library includes:
 #include <cassert>
@@ -15,7 +18,7 @@
 InputHandler::InputHandler()
 : m_pGameController(0)
 {
-
+	Entity::Entity();
 }
 
 InputHandler::~InputHandler()
@@ -26,15 +29,15 @@ InputHandler::~InputHandler()
 		//delete m_pGameController;
 		//m_pGameController = 0;
 	}
+	Entity::~Entity();
 }
 
-bool InputHandler::Initialise()
+bool InputHandler::Initialise(BackBuffer* m_pBackBuffer)
 {
 	int numControllers = SDL_NumJoysticks();
 
 	for (int i = 0; i < numControllers; i++)
 	{
-		// todo: better
 		m_pGameController = SDL_JoystickOpen(i);
 	}
 
@@ -43,7 +46,11 @@ bool InputHandler::Initialise()
 		LogManager::GetInstance().Log("No controller detected!");
 	}
 
-	return (true);
+	Sprite* pTargetSprite = m_pBackBuffer->CreateSprite("assets\\target.png");
+
+	Entity::Initialise(pTargetSprite);
+
+	return true;
 }
 
 void InputHandler::ProcessInput(Game& game)
@@ -71,6 +78,10 @@ void InputHandler::ProcessInput(Game& game)
 			if (e.jbutton.button == CONTROLLER_INPUT::A)
 			{
 				game.FireSpaceShipBullet();
+			}
+			else if (e.jbutton.button == CONTROLLER_INPUT::R3)
+			{
+				game.FirePlayerMissile(m_x, m_y);
 			}
 		}
 		else if (e.type == SDL_KEYDOWN || e.type == SDL_JOYHATMOTION)
@@ -115,7 +126,30 @@ void InputHandler::ProcessInput(Game& game)
 
 			if (e.jaxis.axis == 1)
 			{
-				/* Up-Down movement code goes here */
+				/* Up-Down movement on left stick code goes here */
+			}
+
+			if (e.jaxis.axis == 3) // Sideways
+			{
+				if (e.jaxis.value > 8000 || e.jaxis.value < -8000)
+				{
+					m_velocityX = e.jaxis.value / 50;
+				}
+				else
+				{
+					m_velocityX = 0;
+				}
+			}
+			if (e.jaxis.axis == 4) // Upward
+			{
+				if (e.jaxis.value > 8000 || e.jaxis.value < -8000)
+				{
+					m_velocityY = e.jaxis.value / 50;
+				}
+				else
+				{
+					m_velocityY = 0;
+				}
 			}
 		}
 		else if (e.type == SDL_KEYUP)
