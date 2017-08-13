@@ -15,6 +15,8 @@ public:
 
 	void Process(float deltaTime) override;
 
+	const float m_maxage = 1.0f;
+
 private:
 
 

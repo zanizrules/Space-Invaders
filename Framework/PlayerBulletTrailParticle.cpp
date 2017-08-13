@@ -15,10 +15,17 @@ PlayerBulletTrailParticle::~PlayerBulletTrailParticle()
 void PlayerBulletTrailParticle::Process(float deltaTime)
 {
 
-	// todo: add in custom processing of particles for different effects
-	// Updates each particle: motion, age, other effects…
+	if (GetAge() > m_maxage)
+	{
+		SetDead(true);
+	}
 
-	// particleAccerlation -= gravity
+	// particleVelocity += particleAcceleration * dt
+	m_velocityY += 1; // 9.81f * deltaTime;
+
+
+	// particlePosition += particleVelocity * dt
+	m_y += m_velocityY * deltaTime;
 
 	Particle::Process(deltaTime);
 }

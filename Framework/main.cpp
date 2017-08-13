@@ -16,11 +16,6 @@ int main(int argc, char* argv[])
 	if (!gameInstance.Initialise())
 	{
 		LogManager::GetInstance().Log("Game initialise failed!");
-		/*
-		From LogManager:
-		{182} normal block at 0x08FC9028, 1 bytes long.
-				Data: < > CD 
-		*/
 
 		return (1);
 	}

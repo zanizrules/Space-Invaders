@@ -1,6 +1,8 @@
 #include "ParticleEmitter.h"
 #include "Particle.h"
 #include "game.h"
+#include "SmallStarParticle.h"
+#include "BigStarParticle.h"
 
 ParticleEmitter::ParticleEmitter()
 {
@@ -27,16 +29,22 @@ void ParticleEmitter::Process(float deltaTime)
 	while (particleIter != m_particles.end())
 	{
 
+		if (dynamic_cast<SmallStarParticle*>((*particleIter)) != 0 || dynamic_cast<BigStarParticle*>((*particleIter)) != 0)
+		{
+			if ((*particleIter)->GetPositionY() >= Game::SCREEN_HEIGHT - 4)
+			{
+				(*particleIter)->SetPositionY(0);
+			}
+		}
 		// Kill particle if outside of the screen
-		(*particleIter)->SetDead(
-			(*particleIter)->GetPositionX() <= 0
+		else if ((*particleIter)->GetPositionX() <= 0
 			|| (*particleIter)->GetPositionX() >= Game::SCREEN_WIDTH - 8
 			|| (*particleIter)->GetPositionY() <= 0
-			|| (*particleIter)->GetPositionY() >= Game::SCREEN_HEIGHT - 8
-			//	|| (*particleIter)->GetHorizontalVelocity() == 0
-			//	|| (*particleIter)->GetVerticalVelocity() == 0);
-		);
-
+			|| (*particleIter)->GetPositionY() >= Game::SCREEN_HEIGHT - 8)
+		{
+			(*particleIter)->SetDead(true);
+		}
+		
 		if ((*particleIter)->IsDead())
 		{
 			delete *particleIter;

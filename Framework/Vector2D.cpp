@@ -3,7 +3,7 @@
 
 float Vector2D::getLength()
 {
-	return sqrt(pow(m_x, 2) + pow(m_y, 2));
+	return (float)sqrt(pow(m_x, 2) + (float)pow(m_y, 2.0f));
 }
 
 float Vector2D::dot(float a, float b)

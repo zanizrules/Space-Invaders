@@ -3,7 +3,6 @@
 #include "Particle.h"
 #include "entity.h"
 #include "backbuffer.h"
-#include "logmanager.h"
 
 #include <string>
 

@@ -35,6 +35,8 @@ public:
 	void SpawnExplosion(float x, float y);
 
 	void CreateParticleExplosion(float x, float y, float r);
+
+	void GenerateStars();
 	
 protected:
 	void Process(float deltaTime);
@@ -71,7 +73,7 @@ protected:
 
 	// Game Entities:
 	PlayerShip* m_playerShip;
-	ParticleEmitter* m_ParticleEmitters;
+	ParticleEmitter* m_ParticleEmitter;
 	std::list<EnemyShip*> m_enemyShips;
 	std::list<Bullet*> m_playerBullets;
 	std::list<Explosion*> m_explosions; 

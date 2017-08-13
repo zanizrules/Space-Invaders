@@ -13,6 +13,9 @@
 #include "Explosion.h"
 #include "ParticleEmitter.h"
 #include "AlienExplosionParticle.h"
+#include "PlayerBulletTrailParticle.h"
+#include "SmallStarParticle.h"
+#include "BigStarParticle.h"
 
 // Library includes:
 #include <cassert>
@@ -20,6 +23,7 @@
 #include <cstdio>
 #include <algorithm>
 #include <math.h>
+#include <ctime>
 
 // Static Members:
 Game* Game::sm_pInstance = 0;
@@ -55,7 +59,7 @@ Game::Game()
 , m_lastTime(0)
 , m_lag(0)
 {
-	
+	srand((unsigned int)time(0));
 }
 
 Game::~Game()
@@ -69,8 +73,8 @@ Game::~Game()
 	delete m_pInputHandler;
 	m_pInputHandler = 0;
 
-	delete m_ParticleEmitters;
-	m_ParticleEmitters = 0;
+	delete m_ParticleEmitter;
+	m_ParticleEmitter = 0;
 
 	for (Explosion* explosion : m_explosions)
 	{
@@ -114,15 +118,18 @@ bool Game::Initialise()
 		return (false);
 	}
 
+	// Create the particle emitter for [explosions, bullet trails, stars]
+	m_ParticleEmitter = new ParticleEmitter();
+
+	// Load in stars
+	GenerateStars();
+
 	// Load the player ship sprite.
 	Sprite* pPlayerSprite = m_pBackBuffer->CreateSprite("assets\\playership.png");
 
 	// Create the player ship instance.
 	m_playerShip = new PlayerShip();
 	m_playerShip->Initialise(pPlayerSprite);
-
-	// Create the explosion particle emitter
-	m_ParticleEmitters = new ParticleEmitter();
 
 	// Spawn four rows of alien enemies.
 	float paddingFromEdge = (Game::SCREEN_WIDTH / 100) * 3;
@@ -195,12 +202,23 @@ void Game::Process(float deltaTime)
 
 	// Update the game world simulation:
 
-	// Ex003.5: Process each alien enemy in the container.
+	// Process each alien enemy in the container.
+	//for (EnemyShip* enemy : m_enemyShips)
+	//{
+	//	enemy->Process(deltaTime);
+	//}
 
 	// Update each bullet in the container.
 	for (Bullet* bullet : m_playerBullets)
 	{
 		bullet->Process(deltaTime);
+		if ((rand() % 1000) < 100)
+		{
+			PlayerBulletTrailParticle* pBulletParticle = new PlayerBulletTrailParticle();
+			pBulletParticle->Initialise(m_pBackBuffer, bullet->GetPositionX(), bullet->GetPositionY());
+			pBulletParticle->AddVelocity(0, 9.81f);
+			m_ParticleEmitter->SpawnParticle(pBulletParticle);
+		}
 	}
 
 	for (Explosion* explosion : m_explosions)
@@ -208,7 +226,7 @@ void Game::Process(float deltaTime)
 		explosion->Process(deltaTime);
 	}
 
-	m_ParticleEmitters->Process(deltaTime);
+	m_ParticleEmitter->Process(deltaTime);
 
 	// Update player...
 	m_playerShip->Process(deltaTime);
@@ -292,6 +310,8 @@ void Game::Draw(BackBuffer& backBuffer)
 
 	backBuffer.Clear();
 
+	m_ParticleEmitter->Draw(backBuffer);
+
 	// Draw all enemy aliens in container...
 	for(EnemyShip* enemy : m_enemyShips)
 	{
@@ -309,8 +329,6 @@ void Game::Draw(BackBuffer& backBuffer)
 	{
 		explosion->Draw(backBuffer);
 	}
-
-	m_ParticleEmitters->Draw(backBuffer);
 
 	// Draw the player ship...
 	m_playerShip->Draw(backBuffer);
@@ -347,7 +365,7 @@ void Game::FireSpaceShipBullet()
 	// Create a new bullet object.
 	Bullet* pPlayerBullet = new Bullet();
 	pPlayerBullet->Initialise(pBulletSprite);
-	pPlayerBullet->SetVerticalVelocity(-300);
+	pPlayerBullet->SetVerticalVelocity(-400);
 	pPlayerBullet->SetPosition(m_playerShip->GetPositionX(), m_playerShip->GetPositionY());
 
 	// Add the new bullet to the bullet container.
@@ -385,9 +403,32 @@ void Game::CreateParticleExplosion(float x, float y, float r)
 		AlienExplosionParticle* pExplosionParticle = new AlienExplosionParticle();
 		pExplosionParticle->Initialise(m_pBackBuffer, x, y);
 		//float degrees = (360 / 10) * i; Use * M_PI) / 180 to convert to radians
-		float radians = ((2 * M_PI) / 10) * i;
+		float radians = (float)(((2.0f * M_PI) / 10.0f) * i);
 		pExplosionParticle->AddVelocity(r * cos(radians), r * sin(radians));
 
-		m_ParticleEmitters->SpawnParticle(pExplosionParticle);
+		m_ParticleEmitter->SpawnParticle(pExplosionParticle);
+	}
+}
+
+void Game::GenerateStars()
+{
+	for (int i = 0; i < 100; i++)
+	{
+		SmallStarParticle* pSmallStarParticle = new SmallStarParticle();
+		pSmallStarParticle->Initialise(m_pBackBuffer, (float)(rand() % SCREEN_WIDTH), (float)(rand() % SCREEN_HEIGHT));
+
+		pSmallStarParticle->AddVelocity(0, 1.0f + rand() % 5);
+
+		m_ParticleEmitter->SpawnParticle(pSmallStarParticle);
+	}
+
+	for (int i = 0; i < 50; i++)
+	{
+		BigStarParticle* pBigStarParticle = new BigStarParticle();
+		pBigStarParticle->Initialise(m_pBackBuffer, (float)(rand() % SCREEN_WIDTH), (float)(rand() % SCREEN_HEIGHT));
+
+		pBigStarParticle->AddVelocity(0, 3.0f + rand() % 13);
+
+		m_ParticleEmitter->SpawnParticle(pBigStarParticle);
 	}
 }
