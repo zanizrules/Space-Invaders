@@ -50,6 +50,9 @@ bool InputHandler::Initialise(BackBuffer* m_pBackBuffer)
 
 	Entity::Initialise(pTargetSprite);
 
+	m_x = Game::SCREEN_WIDTH / 2 - 32;
+	m_y = Game::SCREEN_HEIGHT / 2;
+
 	return true;
 }
 
